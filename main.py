@@ -1,11 +1,10 @@
 from collections import OrderedDict
 from sys import stdin
 from technical import *
+from func import eval_
 
-brackets_dict = {')': '(', ']': '['}
 
-
-def create_exp(source, matrix_valuables, vector_valuables, brackets):
+'''def create_exp(source, matrix_valuables, vector_valuables, brackets):
     # exp = [] if brackets else [[]]
     exp = [[]]
 
@@ -32,16 +31,68 @@ def create_exp(source, matrix_valuables, vector_valuables, brackets):
             matrix_valuables[i] = Matrix()
         elif i.islower():
             exp[-1].append(i)
-            vector_valuables[i] = Vector()
+            vector_valuables[i] = Vector()'''
 
 
-def solution(filename):
-    if filename:
-        f = open(filename)
+def solution(filename="", file=False):
+    if file:
+        with open(filename) as f:
+            data = f.readlines()
     else:
-        f = stdin
+        data = stdin.readlines()
 
-    ans = ""
+    expression = ""
+    valuables = {}
+    queue = ["", ""]
+
+    # считывание выражения
+    a = data[0].strip()
+    for i in range(len(a) - 1):
+        if a[i].isalpha():
+            expression += a[i]
+            if a[i + 1].isalpha() or a[i + 1] == "(":
+                expression += '*'
+
+            if a[i].isupper() and a[i] not in queue[0]:
+                queue[0] += a[i]
+                valuables[a[i]] = Matrix()
+            elif a[i] != 'x' and a[i].islower() and a[i] not in queue[1]:
+                queue[1] += a[i]
+                valuables[a[i]] = valuables.get(a[i], Vector())
+        elif a[i] in "()+*":
+            expression += a[i]
+    expression += a[-1]
+
+    # запись значений матриц и векторов
+    it = iter(data[1:])
+    for k in queue[0]:
+        rows_n_cols = list(map(int, it.__next__().split()))
+        rows = rows_n_cols[0]
+        if len(rows_n_cols) == 1:
+            cols = rows
+        else:
+            cols = rows_n_cols[1]
+
+        mat = []
+        for _ in range(rows):
+            mat.append(list(map(int, it.__next__().split())))
+
+        print(rows, cols, mat)
+        assert len(mat) == rows and len(mat[0]) == cols
+        valuables[k].set_data(mat)
+    for k in queue[1]:
+        n = int(it.__next__())
+        vec = [list(map(int, it.__next__().split()))]
+        valuables[k].set_data(vec)
+
+        print(n, vec)
+        assert len(vec[0]) == n
+
+    # print(expression)
+    # print(valuables)
+
+
+'''    ans = ""
     matrix_valuables = OrderedDict()
     vector_valuables = OrderedDict()
     expression = create_exp(f, matrix_valuables, vector_valuables, '')
@@ -115,9 +166,15 @@ def solution(filename):
     print(matrix_valuables)
     print(vector_valuables)
 
-    print(ans)
+    print(ans)'''
 
 
 if __name__ == "__main__":
-    filename = input()
-    solution(filename)
+    a = input("Ввод из файла или из консоли? Введите 1, если из файла, что угодно - если из консоли.\n")
+    filename = ''
+    if a.strip() == '1':
+        filename = input("Введите имя файла:\n")
+        file = True
+    else:
+        file = False
+    solution(filename, file)

@@ -1,4 +1,4 @@
-BAc + (DACx + m * (abc + ls)) * d + Cc
+BAc + (DACx + m * (abc + da)) * d + Cc
 2 3
 1 2 3
 3 4 1
@@ -15,3 +15,9 @@ BAc + (DACx + m * (abc + ls)) * d + Cc
 1 2
 3
 1 2 3
+4
+1 4 6 8
+3
+34 6  87
+2
+100 101
