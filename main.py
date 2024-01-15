@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from sys import stdin
 from technical import *
 from func import eval_
@@ -51,12 +50,12 @@ def solution(filename="", file=False):
 
         mat = []
         for _ in range(rows):
-            mat.append(list(map(int, it.__next__().split())))
+            mat.append(list(map(complex, it.__next__().replace('i', 'j').split())))
         assert len(mat) == rows and len(mat[0]) == cols
         valuables[k].set_data(mat)
     for k in queue[1]:
         n = int(it.__next__())
-        vec = [list(map(int, it.__next__().split()))]
+        vec = [list(map(complex, it.__next__().replace('i', 'j').split()))]
         valuables[k].set_data(vec)
         assert len(vec[0]) == n
 

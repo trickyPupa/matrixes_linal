@@ -68,7 +68,7 @@ def gauss(a, y):
 
 
 class Matrix:
-    def __init__(self, n: int = 0, m: int = 0, data: list[list[float]] = None, other=None):
+    def __init__(self, n: int = 0, m: int = 0, data: list[list[complex]] = None, other=None):
         if other is not None:
             if isinstance(other, Matrix):
                 self.matrix = other.matrix.copy()
@@ -114,7 +114,7 @@ class Matrix:
                    for i in range(self.rows)]
 
             return Matrix(data=res) if len(res) != 1 else Vector(data=res[0])
-        elif isinstance(other, (int, float)):
+        elif isinstance(other, (int, float, complex)):
             return Matrix(data=[[j * other for j in self.matrix[i]] for i in range(self.rows)])
         elif isinstance(other, X):
             return other * self
@@ -164,7 +164,7 @@ class Matrix:
 
 
 class Vector(Matrix):
-    def __init__(self, n=0, data: list[float] = None):
+    def __init__(self, n=0, data: list[complex] = None):
         if data is not None:
             super().__init__(data=[data])
         elif n:
@@ -178,7 +178,7 @@ class X:
         super().__init__()
 
     def __mul__(self, other):
-        if isinstance(other, (Matrix, int, float)):
+        if isinstance(other, (Matrix, complex, int, float)):
             return SLAU(other, self)
         else:
             raise TypeError("Неподходящий множитель для X:" + other)
@@ -191,7 +191,7 @@ class SLAU:
         self.free = free
 
     def __mul__(self, other):
-        if isinstance(other, (int, float, Matrix)):
+        if isinstance(other, (int, float, complex, Matrix)):
             return SLAU(self.matrix * other, self.x) if self.free is None \
                 else SLAU(self.matrix * other, self.x, self.free * other)
         else:
